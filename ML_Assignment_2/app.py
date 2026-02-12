@@ -3,6 +3,7 @@ import pandas as pd
 import pickle
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os  # Added to handle file paths
 from sklearn.metrics import (
     accuracy_score, precision_score, recall_score, 
     f1_score, matthews_corrcoef, roc_auc_score,
@@ -27,8 +28,14 @@ if uploaded_file is not None:
         X_test = test_data.drop('price_range', axis=1)
         y_test = test_data['price_range']
 
-        # Load model
-        with open(f'model/{model_option}.pkl', 'rb') as f:
+        # --- PATH FIX FOR STREAMLIT CLOUD ---
+        # This gets the directory where app.py is located
+        base_path = os.path.dirname(__file__) 
+        # This joins the base path with the 'model' folder and the filename
+        model_path = os.path.join(base_path, 'model', f'{model_option}.pkl')
+
+        # Load model using the new model_path
+        with open(model_path, 'rb') as f:
             model = pickle.load(f)
 
         # Predictions
